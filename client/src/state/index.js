@@ -72,7 +72,7 @@ export const {
   setMode,
   setLogin,
   setLogout,
-  setFriends, // This should now work
+  setFriends,
   addFriend,
   removeFriend,
   setPosts,
