@@ -18,8 +18,9 @@ export const authSlice = createSlice({
       localStorage.setItem("themeMode", state.mode); // Persist mode
     },
     setLogin: (state, action) => {
-      state.user = action.payload.user;
+      state.user = action.payload.user; // Ensure action.payload.user includes friends array
       state.token = action.payload.token;
+      console.log('Logged-in user:', action.payload.user); // Check structure here
     },
     setLogout: (state) => {
       state.user = null;
@@ -29,7 +30,7 @@ export const authSlice = createSlice({
       if (state.user) {
         state.user.friends = action.payload.friends;
       } else {
-        console.error("User friends non-existent :(");
+        console.error("User is not logged in. Cannot set friends.");
       }
     },
     addFriend: (state, action) => {
@@ -71,7 +72,7 @@ export const {
   setMode,
   setLogin,
   setLogout,
-  setFriends,
+  setFriends, // This should now work
   addFriend,
   removeFriend,
   setPosts,
@@ -79,4 +80,5 @@ export const {
   setError,
   setLoading,
 } = authSlice.actions;
+
 export default authSlice.reducer;
