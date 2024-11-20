@@ -1,12 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
+  Typography,
   IconButton,
   InputBase,
-  Typography,
+  FormControl,
   Select,
   MenuItem,
-  FormControl,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
@@ -22,6 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../../state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "../../components/FlexBetween";
+import SearchWidget from "../widgets/SearchWidget";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -63,10 +64,7 @@ const Navbar = () => {
             gap="3rem"
             padding="0.1rem 1.5rem"
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
-              <Search />
-            </IconButton>
+            <SearchWidget />
           </FlexBetween>
         )}
       </FlexBetween>
@@ -80,8 +78,9 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-
-
+          <IconButton>
+            <Notifications sx={{ fontSize: "25px" }} />
+          </IconButton>
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -142,17 +141,16 @@ const Navbar = () => {
             alignItems="center"
             gap="3rem"
           >
-            <IconButton
-              onClick={() => dispatch(setMode())}
-              sx={{ fontSize: "25px" }}
-            >
+            <IconButton onClick={() => dispatch(setMode())}>
               {theme.palette.mode === "dark" ? (
                 <DarkMode sx={{ fontSize: "25px" }} />
               ) : (
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
             </IconButton>
-            <Notifications sx={{ fontSize: "25px" }} />
+            <IconButton>
+              <Notifications sx={{ fontSize: "25px" }} />
+            </IconButton>
             <FormControl variant="standard" value={fullName}>
               <Select
                 value={fullName}
