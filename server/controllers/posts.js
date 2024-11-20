@@ -93,3 +93,20 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// Add a comment to a post
+export const commentPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { userId, comment } = req.body;
+
+    const user = await User.findById(userId);
+    const post = await Post.findById(id);
+    post.comments.push({ userId, userName: `${user.firstName} ${user.lastName}`, comment });
+
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(404).json({ message: err.message });
+  }
+};
