@@ -2,7 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   mode: localStorage.getItem("themeMode") || "light",
-  user: null,
+  user: {
+    friends: [],
+  },
   token: null,
   posts: [],
   error: null,
@@ -28,7 +30,7 @@ export const authSlice = createSlice({
     },
     setFriends: (state, action) => {
       if (state.user) {
-        state.user.friends = action.payload.friends;
+        state.user.friends = Array.isArray(action.payload.friends) ? action.payload.friends : [];
       } else {
         console.error("User is not logged in. Cannot set friends.");
       }

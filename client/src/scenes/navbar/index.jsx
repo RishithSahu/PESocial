@@ -22,11 +22,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "../../state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "../../components/FlexBetween";
-import { useNotificationContext } from "../../context/NotificationContext";
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
@@ -40,11 +38,6 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
-  const { notifications, loading, error } = useNotificationContext();
-
-  const handleNotificationClick = () => {
-    setIsNotificationOpen(!isNotificationOpen);
-  };
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -88,40 +81,6 @@ const Navbar = () => {
             )}
           </IconButton>
 
-          <IconButton onClick={handleNotificationClick}>
-            <Notifications sx={{ fontSize: "25px" }} />
-          </IconButton>
-
-          {isNotificationOpen && (
-            <Box
-              position="absolute"
-              top="60px"
-              right="0"
-              width="300px"
-              backgroundColor={background}
-              boxShadow={3}
-              borderRadius="8px"
-              padding="1rem"
-              zIndex="10"
-            >
-              {loading ? (
-                <Typography>Loading notifications...</Typography>
-              ) : error ? (
-                <Typography color="error">Error loading notifications</Typography>
-              ) : notifications?.length === 0 ? (
-                <Typography>No new notifications</Typography>
-              ) : (
-                notifications.map((notification) => (
-                  <Box key={notification._id} padding="0.5rem" borderBottom="1px solid #ddd">
-                    <Typography>{notification.message}</Typography>
-                    <Typography variant="body2" color="textSecondary">
-                      {new Date(notification.timestamp).toLocaleString()}
-                    </Typography>
-                  </Box>
-                ))
-              )}
-            </Box>
-          )}
 
           <FormControl variant="standard" value={fullName}>
             <Select

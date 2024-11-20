@@ -12,7 +12,9 @@ import { themeSettings } from "./theme";
 function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
-  const isAuth = Boolean(useSelector((state) => state.token));
+  const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
+  const isAuth = Boolean(token);
 
   return (
     <div className="app">
@@ -30,8 +32,11 @@ function App() {
               element={isAuth ? <ProfilePage /> : <Navigate to="/" />}
             />
             <Route
-              path="/profile/edit/:userId" // Route for edit profile
-              element={isAuth ? <EditProfilePage /> : <Navigate to="/" />}
+              path="/profile/edit"
+              element={isAuth ? (<EditProfilePage 
+                                          userId={user?._id} 
+                                          token={token}   />
+                                ) : <Navigate to="/" />}
             />
           </Routes>
         </ThemeProvider>

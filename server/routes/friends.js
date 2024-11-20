@@ -5,7 +5,7 @@ import { verifyToken } from "../middleware/auth.js";
 const router = express.Router();
 
 // Add a friend
-// Expecting a body with { userId, friendId } (or whatever keys you use for users)
+// Expecting a body with { userId, friendId } 
 router.post("/add", verifyToken, addFriend);
 
 // Accept a friend request

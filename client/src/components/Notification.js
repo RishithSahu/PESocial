@@ -19,7 +19,7 @@ const Notification = () => {
   return (
     <div>
       <button onClick={toggleNotifications}>
-        <i className="bell-icon">🔔</i> {/* Bell icon, can be replaced with an actual icon */}
+        <i className="bell-icon">🔔</i> 
       </button>
 
       {/* Display notification list when open */}

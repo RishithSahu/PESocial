@@ -40,11 +40,19 @@ const EditProfile = ({ userId, token }) => {
     }
 
     try {
+      console.log("Form Data:", Object.fromEntries(form)); // Log form data
+    console.log("Request Details:", {
+      url: `/users/${userId}`, 
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
+      }
+    });
       setLoading(true);
       setError(null);
 
       // Axios request to update the user profile
-      const response = await axios.put(`/users/${userId}`, form, {
+      const response = await axios.put(`http://localhost:3001/users/${userId}`, form, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
@@ -53,12 +61,17 @@ const EditProfile = ({ userId, token }) => {
 
       if (response.status === 200) {
         // Redirect back to the profile page after a successful update
-        navigate(`/profile/${userId}`);
+        navigate(`/home`);
       } else {
         setError("An unexpected error occurred. Please try again.");
       }
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.error("Full Error Details:", {
+        message: error.message,
+        response: error.response?.data,
+        status: error.response?.status,
+        headers: error.response?.headers
+      });
       setError("Failed to update profile. Please check your details.");
     } finally {
       setLoading(false);
