@@ -14,7 +14,6 @@ import {
   Search,
   DarkMode,
   LightMode,
-  Notifications,
   Menu,
   Close,
 } from "@mui/icons-material";
@@ -34,14 +33,10 @@ const Navbar = () => {
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
-  const background = theme.palette.background.default;
-  const primaryLight = theme.palette.primary.light;
-  const alt = theme.palette.background.alt;
-
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    <FlexBetween padding="1rem 6%" backgroundColor={theme.palette.background.alt}>
       <FlexBetween gap="1.75rem">
         <Typography
           fontWeight="bold"
@@ -50,7 +45,7 @@ const Navbar = () => {
           onClick={() => navigate("/home")}
           sx={{
             "&:hover": {
-              color: primaryLight,
+              color: theme.palette.primary.light,
               cursor: "pointer",
             },
           }}
@@ -77,9 +72,6 @@ const Navbar = () => {
             ) : (
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
-          </IconButton>
-          <IconButton>
-            <Notifications sx={{ fontSize: "25px" }} />
           </IconButton>
           <FormControl variant="standard" value={fullName}>
             <Select
@@ -124,7 +116,7 @@ const Navbar = () => {
           zIndex="10"
           maxWidth="500px"
           minWidth="300px"
-          backgroundColor={background}
+          backgroundColor={theme.palette.background.default}
         >
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton
@@ -147,9 +139,6 @@ const Navbar = () => {
               ) : (
                 <LightMode sx={{ color: dark, fontSize: "25px" }} />
               )}
-            </IconButton>
-            <IconButton>
-              <Notifications sx={{ fontSize: "25px" }} />
             </IconButton>
             <FormControl variant="standard" value={fullName}>
               <Select
