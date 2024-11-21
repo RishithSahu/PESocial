@@ -1,21 +1,23 @@
+import React, { useState, useEffect } from 'react';
 import {
   ManageAccountsOutlined,
   EditOutlined,
   LocationOnOutlined,
   WorkOutlineOutlined,
+  Twitter as TwitterIcon,
+  LinkedIn as LinkedInIcon,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme } from "@mui/material";
+import { Box, Typography, Divider, useTheme, TextField, Button, Link } from "@mui/material";
 import UserImage from "../../components/UserImage";
 import FlexBetween from "../../components/FlexBetween";
 import WidgetWrapper from "../../components/WidgetWrapper";
 import { useSelector } from "react-redux";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
+  const [twitterLink, setTwitterLink] = useState('');
+  const [linkedinLink, setLinkedinLink] = useState('');
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -35,6 +37,8 @@ const UserWidget = ({ userId, picturePath }) => {
       }
       const data = await response.json();
       setUser(data);
+      setTwitterLink(data.twitterLink || '');
+      setLinkedinLink(data.linkedinLink || '');
     } catch (error) {
       console.error("Error fetching user:", error);
     }
@@ -42,7 +46,61 @@ const UserWidget = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [userId, token]); // Added userId and token as dependencies
+
+  const handleTwitterLinkChange = (e) => {
+    setTwitterLink(e.target.value);
+  };
+
+  const handleLinkedinLinkChange = (e) => {
+    setLinkedinLink(e.target.value);
+  };
+
+  const handleTwitterLinkSubmit = async (e) => {
+    e.preventDefault();
+    const formattedTwitterLink = twitterLink.startsWith("http") ? twitterLink : `https://${twitterLink}`;
+    try {
+      const response = await fetch(`http://localhost:3001/users/${userId}/twitter`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ twitterLink: formattedTwitterLink }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update Twitter link");
+      }
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      setTwitterLink(updatedUser.twitterLink); // Ensure state is updated
+    } catch (error) {
+      console.error("Error updating Twitter link:", error);
+    }
+  };
+
+  const handleLinkedinLinkSubmit = async (e) => {
+    e.preventDefault();
+    const formattedLinkedinLink = linkedinLink.startsWith("http") ? linkedinLink : `https://${linkedinLink}`;
+    try {
+      const response = await fetch(`http://localhost:3001/users/${userId}/linkedin`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ linkedinLink: formattedLinkedinLink }),
+      });
+      if (!response.ok) {
+        throw new Error("Failed to update LinkedIn link");
+      }
+      const updatedUser = await response.json();
+      setUser(updatedUser);
+      setLinkedinLink(updatedUser.linkedinLink); // Ensure state is updated
+    } catch (error) {
+      console.error("Error updating LinkedIn link:", error);
+    }
+  };
 
   if (!user) {
     return null;
@@ -55,7 +113,6 @@ const UserWidget = ({ userId, picturePath }) => {
     occupation,
     viewedProfile,
     friends,
-    socialLinks, // Assuming socialLinks object contains social media URLs
   } = user;
 
   return (
@@ -139,16 +196,23 @@ const UserWidget = ({ userId, picturePath }) => {
                 Twitter
               </Typography>
               <Typography color={medium}>Social Network</Typography>
+              {twitterLink && (
+                <Link href={twitterLink} target="_blank" rel="noopener" color="primary">
+                  {twitterLink}
+                </Link>
+              )}
             </Box>
           </FlexBetween>
           <EditOutlined
             sx={{ color: main }}
-            onClick={() => navigate(`/edit-social/${userId}/twitter`)} // Edit social links
+            onClick={() => window.open("https://x.com", "_blank")} // Open link in a new tab
           />
         </FlexBetween>
 
+        <Divider />
+
         {/* LinkedIn */}
-        <FlexBetween gap="1rem">
+        <FlexBetween gap="1rem" mb="0.5rem">
           <FlexBetween gap="1rem">
             <LinkedInIcon style={{ color: main, fontSize: "30px" }} />
             <Box>
@@ -156,11 +220,16 @@ const UserWidget = ({ userId, picturePath }) => {
                 LinkedIn
               </Typography>
               <Typography color={medium}>Network Platform</Typography>
+              {linkedinLink && (
+                <Link href="https://x.com" target="_blank" rel="noopener" color="primary">
+                  {linkedinLink}
+                </Link>
+              )}
             </Box>
           </FlexBetween>
           <EditOutlined
             sx={{ color: main }}
-            onClick={() => navigate(`/edit-social/${userId}/linkedin`)} // Edit social links
+            onClick={() => window.open("https://linkedin.com", "_blank")} // Open link in a new tab
           />
         </FlexBetween>
       </Box>

@@ -4,34 +4,45 @@ import searchClient from '../../algoliaConfig';
 import { Box, Typography, useTheme, List, ListItem, ListItemAvatar, Avatar, ListItemText, Divider } from '@mui/material';
 import FlexBetween from '../../components/FlexBetween';
 
-const Hit = ({ hit }) => (
-  <ListItem alignItems="flex-start">
-    <ListItemAvatar>
-      <Avatar src={`http://localhost:3001/assets/${hit.userPicturePath}`} alt={hit.firstName} />
-    </ListItemAvatar>
-    <ListItemText
-      primary={`${hit.firstName} ${hit.lastName}`}
-      secondary={
-        <>
-          <Typography variant="body2" color="textSecondary">
-            {hit.location}
-          </Typography>
-          <Typography variant="body1" color="textPrimary" sx={{ mt: 1 }}>
-            {hit.description}
-          </Typography>
-        </>
-      }
-    />
-  </ListItem>
-);
+const Hit = ({ hit }) => {
+  const theme = useTheme();
+  const textColor = theme.palette.mode === 'dark' ? theme.palette.neutral.light : theme.palette.text.primary;
+  const secondaryTextColor = theme.palette.mode === 'dark' ? theme.palette.neutral.medium : theme.palette.text.secondary;
+
+  return (
+    <ListItem alignItems="flex-start">
+      <ListItemAvatar>
+        <Avatar src={`http://localhost:3001/assets/${hit.userPicturePath}`} alt={hit.firstName} />
+      </ListItemAvatar>
+      <ListItemText
+        primary={<Typography color={textColor}>{`${hit.firstName} ${hit.lastName}`}</Typography>}
+        secondary={
+          <>
+            <Typography variant="body2" color={secondaryTextColor}>
+              {hit.location}
+            </Typography>
+            <Typography variant="body1" color={textColor} sx={{ mt: 1 }}>
+              {hit.description}
+            </Typography>
+          </>
+        }
+      />
+    </ListItem>
+  );
+};
 
 const CustomHits = connectHits(({ hits }) => {
+  const theme = useTheme();
+  const backgroundColor = theme.palette.mode === 'dark' 
+    ? theme.palette.background.paper 
+    : theme.palette.background.default;
+
   if (hits.length === 0) {
     return <Typography>No results found.</Typography>;
   }
 
   return (
-    <List>
+    <List sx={{ backgroundColor, borderRadius: 1, p: 2 }}>
       {hits.map((hit, index) => (
         <React.Fragment key={hit.objectID}>
           <Hit hit={hit} />
@@ -45,6 +56,8 @@ const CustomHits = connectHits(({ hits }) => {
 const SearchWidget = () => {
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
+  const backgroundColor = theme.palette.mode === 'dark' ? theme.palette.background.alt : theme.palette.background.default;
+  const textColor = theme.palette.mode === 'dark' ? theme.palette.neutral.light : theme.palette.text.primary;
   const [hasSearched, setHasSearched] = useState(false);
 
   const handleSearchStateChange = ({ query }) => {
@@ -70,12 +83,13 @@ const SearchWidget = () => {
             top="100%"
             left="0"
             right="0"
-            backgroundColor="white"
+            backgroundColor={backgroundColor}
+            color={textColor}
             boxShadow="0px 4px 6px rgba(0, 0, 0, 0.1)"
             borderRadius="0 0 9px 9px"
             zIndex="10"
-            maxHeight="1000px"
-            overflowY="scroll"
+            maxHeight="900px"
+            overflowY="auto"
           >
             <CustomHits />
           </Box>
