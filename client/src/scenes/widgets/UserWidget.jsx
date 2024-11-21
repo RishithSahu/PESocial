@@ -46,61 +46,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
   useEffect(() => {
     getUser();
-  }, [userId, token]); // Added userId and token as dependencies
-
-  const handleTwitterLinkChange = (e) => {
-    setTwitterLink(e.target.value);
-  };
-
-  const handleLinkedinLinkChange = (e) => {
-    setLinkedinLink(e.target.value);
-  };
-
-  const handleTwitterLinkSubmit = async (e) => {
-    e.preventDefault();
-    const formattedTwitterLink = twitterLink.startsWith("http") ? twitterLink : `https://${twitterLink}`;
-    try {
-      const response = await fetch(`http://localhost:3001/users/${userId}/twitter`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ twitterLink: formattedTwitterLink }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update Twitter link");
-      }
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-      setTwitterLink(updatedUser.twitterLink); // Ensure state is updated
-    } catch (error) {
-      console.error("Error updating Twitter link:", error);
-    }
-  };
-
-  const handleLinkedinLinkSubmit = async (e) => {
-    e.preventDefault();
-    const formattedLinkedinLink = linkedinLink.startsWith("http") ? linkedinLink : `https://${linkedinLink}`;
-    try {
-      const response = await fetch(`http://localhost:3001/users/${userId}/linkedin`, {
-        method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ linkedinLink: formattedLinkedinLink }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update LinkedIn link");
-      }
-      const updatedUser = await response.json();
-      setUser(updatedUser);
-      setLinkedinLink(updatedUser.linkedinLink); // Ensure state is updated
-    } catch (error) {
-      console.error("Error updating LinkedIn link:", error);
-    }
-  };
+  }, [userId, token]);
 
   if (!user) {
     return null;
