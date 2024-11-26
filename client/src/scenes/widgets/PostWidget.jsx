@@ -13,6 +13,7 @@ import {
   FavoriteBorderOutlined,
   FavoriteOutlined,
   DeleteOutlined,
+  EditOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost, setPosts } from "../../state";
@@ -131,11 +132,11 @@ const PostWidget = ({
           )}
         </FlexBetween>
         {isComments && (
-          <Box>
+          <Box mt={2}>
             {comments.map((comment, i) => (
-              <Box key={i}>
+              <Box key={i} mt={1}>
                 <Divider />
-                <Typography>
+                <Typography mt={1}>
                   <strong>{comment.userName || "Anonymous"}:</strong> {comment.comment}
                 </Typography>
               </Box>
@@ -146,8 +147,11 @@ const PostWidget = ({
                 onChange={(e) => setNewComment(e.target.value)}
                 placeholder="Add a comment..."
                 fullWidth
+                margin="normal"
               />
-              <Button type="submit">Comment</Button>
+              <Button type="submit" variant="contained" color="primary">
+                Comment
+              </Button>
             </form>
           </Box>
         )}

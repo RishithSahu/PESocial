@@ -1,4 +1,3 @@
-// server/updateAlgolia.js
 import mongoose from 'mongoose';
 import algoliasearch from 'algoliasearch';
 import dotenv from 'dotenv';
@@ -28,6 +27,10 @@ const index = client.initIndex('posts_index');
 const updateAlgolia = async () => {
   try {
     await connectDB();
+
+    // Clear all previous entries in the Algolia index
+    await index.clearObjects();
+    console.log('Cleared all previous entries in Algolia index');
 
     const posts = await Post.find();
     const algoliaObjects = posts.map(post => ({

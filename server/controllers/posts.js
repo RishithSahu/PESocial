@@ -1,11 +1,10 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
 
-
 // CREATE 
 export const createPost = async (req, res) => {
   try {
-    const { userId, description, picturePath } = req.body;
+    const { userId, description } = req.body;
     const user = await User.findById(userId);
     const newPost = new Post({
       userId,
@@ -14,7 +13,7 @@ export const createPost = async (req, res) => {
       location: user.location,
       description,
       userPicturePath: user.picturePath,
-      picturePath,
+      picturePath: req.files['picture'] ? req.files['picture'][0].filename : null,
       likes: {},
       comments: [],
     });
@@ -26,8 +25,6 @@ export const createPost = async (req, res) => {
     res.status(409).json({ message: err.message });
   }
 };
-
-
 
 // READ 
 export const getFeedPosts = async (req, res) => {
@@ -48,8 +45,6 @@ export const getUserPosts = async (req, res) => {
     res.status(404).json({ message: err.message });
   }
 };
-
-
 
 // UPDATE
 export const likePost = async (req, res) => {
@@ -77,8 +72,7 @@ export const likePost = async (req, res) => {
   }
 };
 
-
-// Delete a post
+// DELETE
 export const deletePost = async (req, res) => {
   try {
     const { id } = req.params;
